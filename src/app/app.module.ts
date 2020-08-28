@@ -33,9 +33,11 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
     AppRoutingModule,
     MsalModule.forRoot({
       auth: {
-        clientId: 'Enter_the_Application_Id_Here',
-        authority: 'Enter_the_Cloud_Instance_Id_HereEnter_the_Tenant_Info_Here',
-        redirectUri: 'Enter_the_Redirect_Uri_Here',
+        // a consumer app that allows anyone w/ a MS account to log in
+        clientId: '88bbfc28-3553-4379-a089-5062595769b5', // This is your client ID
+        authority: 'https://login.microsoftonline.com/consumers', // This is your tenant ID
+        redirectUri: 'http://localhost:4200/',
+        postLogoutRedirectUri: 'http://localhost:4200/',
       },
       cache: {
         cacheLocation: 'localStorage',
@@ -51,7 +53,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
       ],
       unprotectedResources: [],
       protectedResourceMap: [
-        ['Enter_the_Graph_Endpoint_Herev1.0/me', ['user.read']]
+        ['https://graph.microsoft.com/v1.0/me', ['user.read']]
       ],
       extraQueryParameters: {}
     })
