@@ -21,8 +21,6 @@ export function initializerFactory(
   configService: ConfigService,
   configUrl: string,
 ) {
-  // APP_INITIALIZER, except a function return which will return a promise
-  // APP_INITIALIZER, Angular doesn't start application until it completes
   return async () => {
     await configService.init(configUrl);
     console.log(configService.getSettings('clientId'));

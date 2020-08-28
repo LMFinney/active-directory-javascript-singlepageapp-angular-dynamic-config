@@ -1,6 +1,6 @@
 import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { mapTo, tap } from 'rxjs/operators';
+import { get } from 'lodash';
 
 export interface Config {
   clientId: string;
@@ -32,14 +32,8 @@ export class ConfigService {
     this.http = new HttpClient(httpHandler);
   }
 
-  init(endpoint: string) {
-    return this.http
-      .get<Config>(endpoint)
-      .pipe(
-        tap((value) => (this.settings = value)),
-        mapTo(true),
-      )
-      .toPromise();
+  async init(endpoint: string) {
+    return (this.settings = await this.http.get<Config>(endpoint).toPromise());
   }
 
   getSettings(key?: string | string[]): any {
@@ -47,13 +41,6 @@ export class ConfigService {
       return this.settings;
     }
 
-    if (!Array.isArray(key)) {
-      key = key.split('.');
-    }
-
-    return key.reduce(
-      (acc: any, current: string) => acc && acc[current],
-      this.settings,
-    );
+    return get(this.settings, key);
   }
 }
