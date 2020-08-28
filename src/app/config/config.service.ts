@@ -1,12 +1,23 @@
+import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpBackend } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { mapTo, tap } from 'rxjs/operators';
+
+export interface Config {
+  clientId: string;
+  authority: string;
+  redirectUri: string;
+  postLogoutRedirectUri: string;
+  cacheLocation: string;
+  consentScopes: string[];
+  protectedResourceMap: (string[] | string)[][];
+  extraQueryParameters?: Record<string, string>;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigService {
-  private settings: any;
+  private settings: Config;
   private http: HttpClient;
 
   constructor(httpHandler: HttpBackend) {
@@ -21,21 +32,14 @@ export class ConfigService {
     this.http = new HttpClient(httpHandler);
   }
 
-  init(endpoint: string): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      this.http
-        .get(endpoint)
-        .pipe(map((res) => res))
-        .subscribe(
-          (value) => {
-            this.settings = value;
-            resolve(true);
-          },
-          (error) => {
-            reject(error);
-          },
-        );
-    });
+  init(endpoint: string) {
+    return this.http
+      .get<Config>(endpoint)
+      .pipe(
+        tap((value) => (this.settings = value)),
+        mapTo(true),
+      )
+      .toPromise();
   }
 
   getSettings(key?: string | string[]): any {

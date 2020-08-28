@@ -17,13 +17,16 @@ const isIE =
 
 const AUTH_CONFIG_URL_TOKEN = new InjectionToken<string>('AUTH_CONFIG_URL');
 
-export function initializerFactory(env: ConfigService, configUrl: string): any {
+export function initializerFactory(
+  configService: ConfigService,
+  configUrl: string,
+) {
   // APP_INITIALIZER, except a function return which will return a promise
-  // APP_INITIALIZER, angular doesnt starts application untill it completes
-  const promise = env.init(configUrl).then(() => {
-    console.log(env.getSettings('clientId'));
-  });
-  return () => promise;
+  // APP_INITIALIZER, Angular doesn't start application until it completes
+  return async () => {
+    await configService.init(configUrl);
+    console.log(configService.getSettings('clientId'));
+  };
 }
 
 export function msalConfigFactory(config: ConfigService): Configuration {
@@ -39,7 +42,7 @@ export function msalConfigFactory(config: ConfigService): Configuration {
       storeAuthStateInCookie: isIE, // set to true for IE 11
     },
   };
-  return auth as Configuration;
+  return auth;
 }
 
 export function msalAngularConfigFactory(
@@ -52,7 +55,7 @@ export function msalAngularConfigFactory(
     protectedResourceMap: config.getSettings('protectedResourceMap'),
     extraQueryParameters: config.getSettings('extraQueryParameters'),
   };
-  return auth as MsalAngularConfiguration;
+  return auth;
 }
 
 @NgModule({
