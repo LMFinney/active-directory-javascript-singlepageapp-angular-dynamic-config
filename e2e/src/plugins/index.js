@@ -13,6 +13,8 @@
 // the project's config changing)
 
 const { preprocessTypescript } = require('@nrwl/cypress/plugins/preprocessor');
+const AzureAdSingleSignOn = require('./azure-ad-sso/plugin')
+  .AzureAdSingleSignOn;
 
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
@@ -20,4 +22,5 @@ module.exports = (on, config) => {
 
   // Preprocess Typescript
   on('file:preprocessor', preprocessTypescript(config));
+  on('task', { AzureAdSingleSignOn });
 };

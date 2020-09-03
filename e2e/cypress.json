@@ -1,9 +1,14 @@
 {
+  "env": {
+    "username": "Specify your MS username in cypress.env.json",
+    "password": "Specify your MS password in cypress.env.json",
+    "appUrl": "http://localhost:4200/"
+  },
   "fileServerFolder": ".",
   "fixturesFolder": "./src/fixtures",
   "integrationFolder": "./src/integration",
   "pluginsFile": "./src/plugins/index",
-  "supportFile": false,
+  "supportFile": "./src/support/index.ts",
   "video": true,
   "videosFolder": "../dist/cypress/e2e/videos",
   "screenshotsFolder": "../dist/cypress/e2e/screenshots",
