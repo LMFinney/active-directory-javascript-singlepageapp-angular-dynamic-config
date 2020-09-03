@@ -33,7 +33,7 @@ export class ConfigService {
   }
 
   async init(endpoint: string) {
-    return (this.settings = await this.http.get<Config>(endpoint).toPromise());
+    this.settings = await this.http.get<Config>(endpoint).toPromise();
   }
 
   getSettings(key?: string | string[]): any {
